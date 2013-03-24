@@ -8,10 +8,12 @@ module Libreconv
 
   class Converter
     attr_accessor :soffice_command
-    
+
     def initialize(source, target_path, soffice_command = nil)
       @soffice_command = soffice_command 
-      unless soffice_present?(soffice_command) 
+      determine_soffice_command
+      
+      unless @soffice_command && File.exists?(@soffice_command) 
         raise IOError, "Can't find Libreoffice or Openoffice executable."
       end
 
@@ -30,11 +32,11 @@ module Libreconv
 
     private
 
-    def soffice_present?(soffice_command = nil)
-      if soffice_command
-        File.exists?(soffice_command)
-      else
-        which("soffice.exe") || which("soffice.bin") || which("soffice")
+    def determine_soffice_command
+      unless @soffice_command
+        @soffice_command ||= which("soffice")
+        @soffice_command ||= which("soffice.bin")
+        @soffice_command ||= which("soffice.exe")
       end
     end
 
