@@ -10,6 +10,8 @@ module Libreconv
     attr_accessor :soffice_command
 
     def initialize(source, target_path, soffice_command = nil)
+      @source = source
+      @target_path = target_path
       @soffice_command = soffice_command 
       determine_soffice_command
       
@@ -23,11 +25,7 @@ module Libreconv
     end
 
     def convert
-      if soffice_command
-        system(soffice_command)
-      else
-        system("soffice --headless --convert-to pdf #{source} -outdir #{target}")
-      end
+      system("#{@soffice_command} --headless --convert-to pdf #{@source} -outdir #{@target_path}")
     end
 
     private
