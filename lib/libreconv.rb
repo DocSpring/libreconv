@@ -2,14 +2,19 @@ require "libreconv/version"
 
 module Libreconv
 
-  def self.convert(source, soffice_command = nil)
-    
+  def self.convert(source, target, soffice_command = nil)
     unless soffice_present?(soffice_command) 
       raise IOError, "Can't find Libreoffice or Openoffice executable."
     end
 
     unless File.exists?(source)
       raise IOError, "Source file (#{@source}) does not exist."
+    end
+
+    if soffice_command
+      system(soffice_command)
+    else
+      system("soffice --headless --convert-to pdf #{source} -outdir #{target}")
     end
   end
 
