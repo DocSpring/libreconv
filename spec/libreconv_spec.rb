@@ -34,7 +34,9 @@ describe Libreconv do
 
     describe "#soffice_command" do
       it "should return the user specified command path" do
-        pending
+        cmd = file_path("soffice") # just faking that the command is present here
+        converter = Libreconv::Converter.new(@doc_file, "/target", cmd)
+        converter.soffice_command.should == cmd
       end
 
       it "should return the command found in path" do

@@ -7,8 +7,10 @@ module Libreconv
   end
 
   class Converter
+    attr_accessor :soffice_command
+    
     def initialize(source, target_path, soffice_command = nil)
-      @soffice_command 
+      @soffice_command = soffice_command 
       unless soffice_present?(soffice_command) 
         raise IOError, "Can't find Libreoffice or Openoffice executable."
       end
