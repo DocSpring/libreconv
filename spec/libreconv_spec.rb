@@ -12,21 +12,34 @@ describe Libreconv do
   after(:all) do
   end
 
-  describe '.convert' do
-    it "should raise error if soffice command does not exists" do
-      lambda { Libreconv.convert(@doc_file, "/target", "/Whatever/soffice") }.should raise_error(IOError)
+  describe Libreconv::Converter do
+    describe "#new" do
+      it "should raise error if soffice command does not exists" do
+        lambda { Libreconv::Converter.new(@doc_file, "/target", "/Whatever/soffice") }.should raise_error(IOError)
+      end
+
+      it "should raise error if source file does not exists" do
+        lambda { Libreconv::Converter.new(file_path("nonsense.txt"), "/target") }.should raise_error(IOError)
+      end
     end
 
-    it "should raise error if source file does not exists" do
-      source = file_path("nonsense.txt")
-      lambda { Libreconv.convert(source, "/target") }.should raise_error(IOError)
+    describe "#convert" do
+      it "should convert a doc to pdf" do
+        source = @doc_file
+        target = "/Users/ricn/temp"
+        Libreconv::Converter.new(source, target)
+        File.exists?(target).should == true
+      end
     end
 
-    it "should convert a doc to pdf" do
-      source = @doc_file
-      target = "/Users/ricn/temp"
-      Libreconv.convert(source, target)
-      File.exists?(target).should == true
+    describe "#soffice_command" do
+      it "should return the user specified command path" do
+        pending
+      end
+
+      it "should return the command found in path" do
+        pending
+      end
     end
   end
 end
