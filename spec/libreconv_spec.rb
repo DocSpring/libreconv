@@ -27,7 +27,15 @@ describe Libreconv do
       it "should convert a doc to pdf" do
         source = @doc_file
         target_path = "/Users/ricn/temp"
-        target_file = "#{target_path}/#{File.basename(@doc_file, ".doc")}.pdf" 
+        target_file = "#{target_path}/#{File.basename(source, ".doc")}.pdf" 
+        Libreconv::Converter.new(source, target_path)
+        File.exists?(target_file).should == true
+      end
+
+      it "should convert a docx to pdf" do
+        source = @docx_file
+        target_path = "/Users/ricn/temp"
+        target_file = "#{target_path}/#{File.basename(source, ".docx")}.pdf" 
         Libreconv::Converter.new(source, target_path)
         File.exists?(target_file).should == true
       end
