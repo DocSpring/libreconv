@@ -40,8 +40,9 @@ describe Libreconv do
       end
 
       it "should return the command found in path" do
+        cmd = `which soffice`.strip
         converter = Libreconv::Converter.new(@doc_file, "/target")
-        converter.soffice_command.should == "/Applications/LibreOffice.app/Contents/MacOS/soffice"
+        converter.soffice_command.should == cmd
       end
     end
   end

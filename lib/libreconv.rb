@@ -51,6 +51,5 @@ module Libreconv
     
       return nil
     end
-
   end
 end
