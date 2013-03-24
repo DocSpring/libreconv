@@ -25,7 +25,8 @@ module Libreconv
     end
 
     def convert
-      system("#{@soffice_command} --headless --convert-to pdf #{@source} -outdir #{@target_path}")
+      cmd = "#{@soffice_command} --headless --convert-to pdf #{@source} -outdir #{@target_path}"
+      system(cmd)
     end
 
     private

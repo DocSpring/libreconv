@@ -5,8 +5,8 @@ require 'spec_helper'
 describe Libreconv do 
   
   before(:all) do
-    @docx_file = file_path("document.docx")
-    @doc_file = file_path("document.doc")
+    @docx_file = file_path("docx.docx")
+    @doc_file = file_path("doc.doc")
   end
 
   after(:all) do
@@ -28,7 +28,8 @@ describe Libreconv do
         source = @doc_file
         target_path = "/Users/ricn/temp"
         target_file = "#{target_path}/#{File.basename(source, ".doc")}.pdf" 
-        Libreconv::Converter.new(source, target_path)
+        converter = Libreconv::Converter.new(source, target_path)
+        converter.convert
         File.exists?(target_file).should == true
       end
 
@@ -36,7 +37,8 @@ describe Libreconv do
         source = @docx_file
         target_path = "/Users/ricn/temp"
         target_file = "#{target_path}/#{File.basename(source, ".docx")}.pdf" 
-        Libreconv::Converter.new(source, target_path)
+        converter = Libreconv::Converter.new(source, target_path)
+        converter.convert
         File.exists?(target_file).should == true
       end
     end
