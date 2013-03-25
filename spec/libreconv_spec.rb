@@ -10,10 +10,11 @@ describe Libreconv do
     @pptx_file = file_path("pptx.pptx")
     @ppt_file = file_path("ppt.ppt")
     @bin_file = file_path("bin.bin")
-    @target_path = "/tmp"
+    @target_path = "/tmp/libreconv"
   end
 
   after(:all) do
+    FileUtils.rm_rf @target_path
   end
 
   describe Libreconv::Converter do
