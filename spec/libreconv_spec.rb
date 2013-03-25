@@ -10,6 +10,7 @@ describe Libreconv do
     @pptx_file = file_path("pptx.pptx")
     @ppt_file = file_path("ppt.ppt")
     @bin_file = file_path("bin.bin")
+    @target_path = "/tmp"
   end
 
   after(:all) do
@@ -29,45 +30,40 @@ describe Libreconv do
     describe "#convert" do
       it "should convert a doc to pdf" do
         source = @doc_file
-        target_path = "/tmp"
-        target_file = "#{target_path}/#{File.basename(source, ".doc")}.pdf" 
-        converter = Libreconv::Converter.new(source, target_path)
+        target_file = "#{@target_path}/#{File.basename(source, ".doc")}.pdf" 
+        converter = Libreconv::Converter.new(source, @target_path)
         converter.convert
         File.exists?(target_file).should == true
       end
 
       it "should convert a docx to pdf" do
         source = @docx_file
-        target_path = "/tmp"
-        target_file = "#{target_path}/#{File.basename(source, ".docx")}.pdf" 
-        converter = Libreconv::Converter.new(source, target_path)
+        target_file = "#{@target_path}/#{File.basename(source, ".docx")}.pdf" 
+        converter = Libreconv::Converter.new(source, @target_path)
         converter.convert
         File.exists?(target_file).should == true
       end
 
       it "should convert a pptx to pdf" do
         source = @pptx_file
-        target_path = "/tmp"
-        target_file = "#{target_path}/#{File.basename(source, ".pptx")}.pdf" 
-        converter = Libreconv::Converter.new(source, target_path)
+        target_file = "#{@target_path}/#{File.basename(source, ".pptx")}.pdf" 
+        converter = Libreconv::Converter.new(source, @target_path)
         converter.convert
         File.exists?(target_file).should == true
       end
 
       it "should convert a ppt to pdf" do
         source = @ppt_file
-        target_path = "/tmp"
-        target_file = "#{target_path}/#{File.basename(source, ".ppt")}.pdf" 
-        converter = Libreconv::Converter.new(source, target_path)
+        target_file = "#{@target_path}/#{File.basename(source, ".ppt")}.pdf" 
+        converter = Libreconv::Converter.new(source, @target_path)
         converter.convert
         File.exists?(target_file).should == true
       end
 
       it "try converting binary file" do
         source = @bin_file
-        target_path = "/tmp"
-        target_file = "#{target_path}/#{File.basename(source, ".bin")}.pdf" 
-        converter = Libreconv::Converter.new(source, target_path)
+        target_file = "#{@target_path}/#{File.basename(source, ".bin")}.pdf" 
+        converter = Libreconv::Converter.new(source, @target_path)
         converter.convert
         File.exists?(target_file).should == false
       end
