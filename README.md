@@ -26,7 +26,7 @@ You need to install Libreoffice or Openoffice on your system to use this gem. Th
 require 'libreconv'
 
 # Converts document.docx to document.pdf
-# This requires that the soffice or the soffice.bin is present in your PATH.
+# This requires that the soffice binary is present in your PATH.
 Libreconv.convert('document.docx', '/Users/ricn/pdf_documents')
 
 # Converts document.docx to document.pdf
