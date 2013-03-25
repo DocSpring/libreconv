@@ -26,7 +26,7 @@ module Libreconv
 
     def convert
       cmd = "#{@soffice_command} --headless --convert-to pdf #{@source} -outdir #{@target_path}"
-      system(cmd)
+      system("#{cmd} > /dev/null")
     end
 
     private
@@ -35,7 +35,6 @@ module Libreconv
       unless @soffice_command
         @soffice_command ||= which("soffice")
         @soffice_command ||= which("soffice.bin")
-        @soffice_command ||= which("soffice.exe")
       end
     end
 
