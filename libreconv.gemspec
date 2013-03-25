@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Libreconv::VERSION
   spec.authors       = ["Richard Nyström"]
   spec.email         = ["ricny046@gmail.com"]
-  spec.description   = %q{ Convert office documents to different formats. Uses Libreoffice to do the heavy lifting. }
-  spec.summary       = %q{ Convert office documents to different formats. }
-  spec.homepage      = ""
+  spec.description   = %q{ Convert office documents to PDF using Libreoffice to do the heavy lifting. }
+  spec.summary       = %q{ Convert office documents to PDF. }
+  spec.homepage      = "https://github.com/ricn/libreconvs"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
