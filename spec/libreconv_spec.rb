@@ -7,6 +7,7 @@ describe Libreconv do
   before(:all) do
     @docx_file = file_path("docx.docx")
     @doc_file = file_path("doc.doc")
+    @bin_file = file_path("bin.bin")
   end
 
   after(:all) do
@@ -40,6 +41,15 @@ describe Libreconv do
         converter = Libreconv::Converter.new(source, target_path)
         converter.convert
         File.exists?(target_file).should == true
+      end
+
+      it "try converting binary file" do
+        source = @bin_file
+        target_path = "/Users/ricn/temp"
+        target_file = "#{target_path}/#{File.basename(source, ".bin")}.pdf" 
+        converter = Libreconv::Converter.new(source, target_path)
+        converter.convert
+        File.exists?(target_file).should == false
       end
     end
 
