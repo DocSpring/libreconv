@@ -1,6 +1,8 @@
 # Libreconv
 
-TODO: Write a gem description
+Convert office documents to PDF using LibreOffice / OpenOffice to do the heavy lifting.
+
+[![Code Climate](https://codeclimate.com/github/ricn/libreconv.png)](https://codeclimate.com/github/ricn/libreconv)
 
 ## Installation
 
@@ -18,7 +20,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+You need to install Libreoffice or Openoffice on your system to use this gem. The code has been tested with Libreoffice 4.0.
+
+```ruby
+require 'libreconv'
+
+# Converts document.docx to document.pdf
+# This requires that the soffice or the soffice.bin is present in your PATH.
+Libreconv.convert('document.docx', '/Users/ricn/pdf_documents')
+
+# Converts document.docx to document.pdf
+# If you for some reason can't have soffice in your PATH you can specifiy the file path to the soffice binary
+Libreconv.convert('document.docx', '/Users/ricn/pdf_documents', '/Applications/LibreOffice.app/Contents/MacOS/soffice')
+
+```
+
+## Credits
+
+The following people have contributed ideas, documentation, or code to Libreconv:
+
+* Richard Nyström
 
 ## Contributing
 
