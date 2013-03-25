@@ -79,5 +79,13 @@ describe Libreconv do
         converter.soffice_command.should == cmd
       end
     end
+
+    describe ".convert" do
+      it "should convert a file to pdf" do
+        target_file = "#{@target_path}/#{File.basename(@doc_file, ".doc")}.pdf" 
+        Libreconv.convert(@doc_file, @target_path)
+        File.exists?(target_file).should == true
+      end
+    end
   end
 end

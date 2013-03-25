@@ -3,7 +3,7 @@ require "libreconv/version"
 module Libreconv
 
   def self.convert(source, target, soffice_command = nil)
-    Converter.new(source, target, soffice_command)
+    Converter.new(source, target, soffice_command).convert
   end
 
   class Converter
