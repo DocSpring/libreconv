@@ -1,6 +1,6 @@
 # Libreconv
 
-Convert office documents to PDF using LibreOffice / OpenOffice to do the heavy lifting.
+Convert office documents to PDF using LibreOffice / OpenOffice for the heavy lifting.
 
 [![Code Climate](https://codeclimate.com/github/ricn/libreconv.png)](https://codeclimate.com/github/ricn/libreconv)
 
