@@ -7,6 +7,8 @@ describe Libreconv do
   before(:all) do
     @docx_file = file_path("docx.docx")
     @doc_file = file_path("doc.doc")
+    @pptx_file = file_path("pptx.pptx")
+    @ppt_file = file_path("ppt.ppt")
     @bin_file = file_path("bin.bin")
   end
 
@@ -38,6 +40,24 @@ describe Libreconv do
         source = @docx_file
         target_path = "/Users/ricn/temp"
         target_file = "#{target_path}/#{File.basename(source, ".docx")}.pdf" 
+        converter = Libreconv::Converter.new(source, target_path)
+        converter.convert
+        File.exists?(target_file).should == true
+      end
+
+      it "should convert a pptx to pdf" do
+        source = @pptx_file
+        target_path = "/Users/ricn/temp"
+        target_file = "#{target_path}/#{File.basename(source, ".pptx")}.pdf" 
+        converter = Libreconv::Converter.new(source, target_path)
+        converter.convert
+        File.exists?(target_file).should == true
+      end
+
+      it "should convert a ppt to pdf" do
+        source = @ppt_file
+        target_path = "/Users/ricn/temp"
+        target_file = "#{target_path}/#{File.basename(source, ".ppt")}.pdf" 
         converter = Libreconv::Converter.new(source, target_path)
         converter.convert
         File.exists?(target_file).should == true
