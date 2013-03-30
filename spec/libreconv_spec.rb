@@ -23,7 +23,7 @@ describe Libreconv do
         lambda { Libreconv::Converter.new(@doc_file, "/target", "/Whatever/soffice") }.should raise_error(IOError)
       end
 
-      it "should raise error if source file does not exists" do
+      it "should raise error if source does not exists" do
         lambda { Libreconv::Converter.new(file_path("nonsense.txt"), "/target") }.should raise_error(IOError)
       end
     end
@@ -53,6 +53,14 @@ describe Libreconv do
       it "should convert a ppt to pdf" do
         target_file = "#{@target_path}/#{File.basename(@ppt_file, ".ppt")}.pdf" 
         converter = Libreconv::Converter.new(@ppt_file, @target_path)
+        converter.convert
+        File.exists?(target_file).should == true
+      end
+
+      it "should convert a docx to pdf specifying an URL as source" do
+        url = "https://www.filepicker.io/api/file/XqCEPkH9RdOQr0S6zF5N"
+        target_file = "#{@target_path}/XqCEPkH9RdOQr0S6zF5N.pdf"
+        converter = Libreconv::Converter.new(url, @target_path)
         converter.convert
         File.exists?(target_file).should == true
       end

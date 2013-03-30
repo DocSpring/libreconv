@@ -1,4 +1,6 @@
 require "libreconv/version"
+require "uri"
+require "net/http"
 
 module Libreconv
 
@@ -14,13 +16,10 @@ module Libreconv
       @target_path = target_path
       @soffice_command = soffice_command 
       determine_soffice_command
+      check_source_type
       
       unless @soffice_command && File.exists?(@soffice_command) 
         raise IOError, "Can't find Libreoffice or Openoffice executable."
-      end
-
-      unless File.exists?(source)
-        raise IOError, "Source file (#{source}) does not exist."
       end
     end
 
@@ -48,6 +47,18 @@ module Libreconv
       end
     
       return nil
+    end
+
+    def check_source_type
+      if File.exists?(@source) && File.directory?(@source) == false
+        :file
+      elsif URI(@source).scheme == "http" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
+        :http
+      elsif URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
+        :https
+      else
+        raise IOError, "Source (#{@source}) is neither file nor http."
+      end
     end
   end
 end
