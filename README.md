@@ -29,6 +29,9 @@ require 'libreconv'
 # This requires that the soffice binary is present in your PATH.
 Libreconv.convert('document.docx', '/Users/ricn/pdf_documents')
 
+# You can also convert a source file directly from an URL
+Libreconv.convert('http://myserver.com/123/document.docx', '/Users/ricn/pdf_documents')
+
 # Converts document.docx to document.pdf
 # If you for some reason can't have soffice in your PATH you can specifiy the file path to the soffice binary
 Libreconv.convert('document.docx', '/Users/ricn/pdf_documents', '/Applications/LibreOffice.app/Contents/MacOS/soffice')
