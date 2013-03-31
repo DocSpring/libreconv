@@ -25,7 +25,8 @@ module Libreconv
 
     def convert
       cmd = "#{@soffice_command} --headless --convert-to pdf #{@source} -outdir #{@target_path}"
-      system("#{cmd} > /dev/null")
+      pid = Process.spawn(cmd, [:out, :err] => "/dev/null")
+      Process.waitpid(pid)
     end
 
     private
