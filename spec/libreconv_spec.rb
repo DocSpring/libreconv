@@ -9,7 +9,6 @@ describe Libreconv do
     @doc_file = file_path("doc.doc")
     @pptx_file = file_path("pptx.pptx")
     @ppt_file = file_path("ppt.ppt")
-    @bin_file = file_path("bin.bin")
     @target_path = "/tmp/libreconv"
   end
 
@@ -63,14 +62,6 @@ describe Libreconv do
         converter = Libreconv::Converter.new(url, @target_path)
         converter.convert
         File.exists?(target_file).should == true
-      end
-
-      it "try converting binary file" do
-        source = @bin_file
-        target_file = "#{@target_path}/#{File.basename(source, ".bin")}.pdf" 
-        converter = Libreconv::Converter.new(source, @target_path)
-        converter.convert
-        File.exists?(target_file).should == false
       end
     end
 
