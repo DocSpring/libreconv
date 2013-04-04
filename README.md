@@ -3,6 +3,7 @@
 Convert office documents to PDF using LibreOffice / OpenOffice.
 
 [![Code Climate](https://codeclimate.com/github/ricn/libreconv.png)](https://codeclimate.com/github/ricn/libreconv)
+[![Build Status](https://travis-ci.org/ricn/libreconv.png?branch=master)](https://travis-ci.org/ricn/libreconv)
 
 ## Installation
 
