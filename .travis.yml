@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - ruby-head
+  - rbx-19mode
+notifications:
+  recipients:
+    - ricny046@gmail.com
+before_install:
+  - sudo apt-get install libreoffice
