@@ -10,10 +10,25 @@ describe Libreconv do
     @pptx_file = file_path("pptx.pptx")
     @ppt_file = file_path("ppt.ppt")
     @target_path = "/tmp/libreconv"
+    dir = File.expand_path(File.join(File.dirname(__FILE__), 'fixtures'))  
+    port = 50506
+    @url = "http://#{Socket.gethostname}:#{port}"
+    @t1 = Thread.new do
+      @server = HTTPServer.new(:Port => port, :DocumentRoot => dir, :AccessLog => [], :Logger => WEBrick::Log::new("/dev/null", 7))
+      @server.start
+    end
+  end
+
+  before(:each) do
+    FileUtils.mkdir_p @target_path
+  end
+
+  after(:each) do
+    FileUtils.rm_rf @target_path
   end
 
   after(:all) do
-    FileUtils.rm_rf @target_path
+    @t1.exit
   end
 
   describe Libreconv::Converter do
@@ -57,8 +72,8 @@ describe Libreconv do
       end
 
       it "should convert a docx to pdf specifying an URL as source" do
-        url = "https://www.filepicker.io/api/file/XqCEPkH9RdOQr0S6zF5N"
-        target_file = "#{@target_path}/XqCEPkH9RdOQr0S6zF5N.pdf"
+        url = "#{@url}/docx.docx"
+        target_file = "#{@target_path}/docx.pdf"
         converter = Libreconv::Converter.new(url, @target_path)
         converter.convert
         File.exists?(target_file).should == true
