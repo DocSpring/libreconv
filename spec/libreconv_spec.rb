@@ -1,6 +1,8 @@
 # encoding: utf-8
-
 require 'spec_helper'
+require 'webrick'
+
+include WEBrick
  
 describe Libreconv do 
   
