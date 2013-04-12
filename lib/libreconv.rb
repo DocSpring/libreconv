@@ -1,6 +1,7 @@
 require "libreconv/version"
 require "uri"
 require "net/http"
+require "tmpdir"
 
 module Libreconv
 
@@ -11,9 +12,10 @@ module Libreconv
   class Converter
     attr_accessor :soffice_command
 
-    def initialize(source, target_path, soffice_command = nil)
+    def initialize(source, target, soffice_command = nil)
       @source = source
-      @target_path = target_path
+      @target = target
+      @target_path = Dir.tmpdir
       @soffice_command = soffice_command 
       determine_soffice_command
       check_source_type
@@ -27,6 +29,8 @@ module Libreconv
       cmd = "#{@soffice_command} --headless --convert-to pdf #{@source} -outdir #{@target_path}"
       pid = Process.spawn(cmd, [:out, :err] => "/dev/null")
       Process.waitpid(pid)
+      target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.pdf"
+      FileUtils.cp target_tmp_file, @target
     end
 
     private
@@ -53,8 +57,7 @@ module Libreconv
     def check_source_type
       is_file = File.exists?(@source) && !File.directory?(@source)
       is_http = URI(@source).scheme == "http" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
-      is_https = URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)    
-      
+      is_https = URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)  
       raise IOError, "Source (#{@source}) is neither a file nor an URL." unless is_file || is_http || is_https
     end
   end

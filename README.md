@@ -26,12 +26,16 @@ You need to install Libreoffice or Openoffice on your system to use this gem. Th
 ```ruby
 require 'libreconv'
 
-# Converts document.docx to document.pdf
+# Converts document.docx to my_document_as.pdf
+# This requires that the soffice binary is present in your PATH.
+Libreconv.convert('document.docx', '/Users/ricn/pdf_documents/my_document_as.pdf')
+
+# Converts document.docx to pdf and writes the output to the specified path
 # This requires that the soffice binary is present in your PATH.
 Libreconv.convert('document.docx', '/Users/ricn/pdf_documents')
 
 # You can also convert a source file directly from an URL
-Libreconv.convert('http://myserver.com/123/document.docx', '/Users/ricn/pdf_documents')
+Libreconv.convert('http://myserver.com/123/document.docx', '/Users/ricn/pdf_documents/doc.pdf')
 
 # Converts document.docx to document.pdf
 # If you for some reason can't have soffice in your PATH you can specifiy the file path to the soffice binary
