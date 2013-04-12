@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Libreconv::VERSION
   spec.authors       = ["Richard Nyström"]
   spec.email         = ["ricny046@gmail.com"]
-  spec.description   = %q{ Convert office documents to PDF using LibreOffice / OpenOffice for the heavy lifting. }
+  spec.description   = %q{ Convert office documents to PDF using LibreOffice. }
   spec.summary       = %q{ Convert office documents to PDF. }
   spec.homepage      = "https://github.com/ricn/libreconv"
   spec.license       = "MIT"
@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
-
+  spec.add_dependency "spoon"
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"

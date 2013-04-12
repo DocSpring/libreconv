@@ -2,6 +2,7 @@ require "libreconv/version"
 require "uri"
 require "net/http"
 require "tmpdir"
+require "spoon"
 
 module Libreconv
 
@@ -27,7 +28,7 @@ module Libreconv
 
     def convert
       cmd = "#{@soffice_command} --headless --convert-to pdf #{@source} -outdir #{@target_path}"
-      pid = Process.spawn(cmd, [:out, :err] => "/dev/null")
+      pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", "pdf", @source, "-outdir", @target_path, ">", "/dev/null")
       Process.waitpid(pid)
       target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.pdf"
       FileUtils.cp target_tmp_file, @target
