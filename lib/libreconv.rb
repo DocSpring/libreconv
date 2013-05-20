@@ -27,8 +27,11 @@ module Libreconv
     end
 
     def convert
-      pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", "pdf", @source, "-outdir", @target_path, ">", "/dev/null")
+      orig_stdout = $stdout.clone
+      $stdout.reopen File.new('/dev/null', 'w')
+      pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", "pdf", @source, "-outdir", @target_path)
       Process.waitpid(pid)
+      $stdout.reopen orig_stdout
       target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.pdf"
       FileUtils.cp target_tmp_file, @target
     end
