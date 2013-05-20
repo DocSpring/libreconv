@@ -27,7 +27,6 @@ module Libreconv
     end
 
     def convert
-      cmd = "#{@soffice_command} --headless --convert-to pdf #{@source} -outdir #{@target_path}"
       pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", "pdf", @source, "-outdir", @target_path, ">", "/dev/null")
       Process.waitpid(pid)
       target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.pdf"
