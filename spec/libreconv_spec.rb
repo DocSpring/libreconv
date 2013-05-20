@@ -1,8 +1,5 @@
 # encoding: utf-8
 require 'spec_helper'
-require 'webrick'
-
-include WEBrick
  
 describe Libreconv do 
   
@@ -12,14 +9,7 @@ describe Libreconv do
     @pptx_file = file_path("pptx.pptx")
     @ppt_file = file_path("ppt.ppt")
     @target_path = "/tmp/libreconv"
-
-    dir = File.expand_path(File.join(File.dirname(__FILE__), 'fixtures'))  
-    port = 50506
-    @url = "http://#{Socket.gethostname}:#{port}"
-    @t1 = Thread.new do
-      @server = HTTPServer.new(:Port => port, :DocumentRoot => dir, :AccessLog => [], :Logger => WEBrick::Log::new("/dev/null", 7))
-      @server.start
-    end
+    @url = "http://s3.amazonaws.com/libreconv-test/docx.docx"
   end
 
   before(:each) do
@@ -28,10 +18,6 @@ describe Libreconv do
 
   after(:each) do
     FileUtils.rm_rf @target_path
-  end
-
-  after(:all) do
-    @t1.exit
   end
 
   describe Libreconv::Converter do
@@ -82,9 +68,8 @@ describe Libreconv do
       end
 
       it "should convert a docx to pdf specifying an URL as source" do
-        url = "#{@url}/docx.docx"
         target_file = "#{@target_path}/docx.pdf"
-        converter = Libreconv::Converter.new(url, @target_path)
+        converter = Libreconv::Converter.new(@url, @target_path)
         converter.convert
         File.file?(target_file).should == true
       end
