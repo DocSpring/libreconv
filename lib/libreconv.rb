@@ -27,13 +27,19 @@ module Libreconv
     end
 
     def convert
-      orig_stdout = $stdout.clone
-      $stdout.reopen File.new('/dev/null', 'w')
-      pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", "pdf", @source, "-outdir", @target_path)
-      Process.waitpid(pid)
-      $stdout.reopen orig_stdout
-      target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.pdf"
-      FileUtils.cp target_tmp_file, @target
+      begin
+        orig_stdout = $stdout.clone
+        $stdout.reopen File.new('/dev/null', 'w')
+        pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", "pdf", @source, "-outdir", @target_path)
+        Process.waitpid(pid)
+        target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.pdf"
+        FileUtils.cp target_tmp_file, @target
+      rescue Exception => e
+        stdout.reopen orig_stdout
+        raise e
+      ensure
+        stdout.reopen orig_stdout
+      end
     end
 
     private
@@ -60,7 +66,7 @@ module Libreconv
     def check_source_type
       is_file = File.exists?(@source) && !File.directory?(@source)
       is_http = URI(@source).scheme == "http" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
-      is_https = URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)  
+      is_https = URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
       raise IOError, "Source (#{@source}) is neither a file nor an URL." unless is_file || is_http || is_https
     end
   end

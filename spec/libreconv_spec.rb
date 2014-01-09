@@ -10,6 +10,7 @@ describe Libreconv do
     @ppt_file = file_path("ppt.ppt")
     @target_path = "/tmp/libreconv"
     @url = "http://s3.amazonaws.com/libreconv-test/docx.docx"
+    @url_https = "https://s3.amazonaws.com/libreconv-test/docx.docx"
   end
 
   before(:each) do
@@ -70,6 +71,13 @@ describe Libreconv do
       it "should convert a docx to pdf specifying an URL as source" do
         target_file = "#{@target_path}/docx.pdf"
         converter = Libreconv::Converter.new(@url, @target_path)
+        converter.convert
+        File.file?(target_file).should == true
+      end
+
+      it "should convert a docx to pdf specifying an https URL as source" do
+        target_file = "#{@target_path}/docx_https.pdf"
+        converter = Libreconv::Converter.new(@url_https, target_file)
         converter.convert
         File.file?(target_file).should == true
       end
