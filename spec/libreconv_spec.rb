@@ -1,8 +1,8 @@
 # encoding: utf-8
 require 'spec_helper'
- 
-describe Libreconv do 
-  
+
+describe Libreconv do
+
   before(:all) do
     @docx_file = file_path("docx.docx")
     @doc_file = file_path("doc.doc")
@@ -23,11 +23,11 @@ describe Libreconv do
   describe Libreconv::Converter do
     describe "#new" do
       it "should raise error if soffice command does not exists" do
-        lambda { Libreconv::Converter.new(@doc_file, "/target", "/Whatever/soffice") }.should raise_error(IOError)
+        expect { Libreconv::Converter.new(@doc_file, "/target", "/Whatever/soffice") }.to raise_error(IOError)
       end
 
       it "should raise error if source does not exists" do
-        lambda { Libreconv::Converter.new(file_path("nonsense.txt"), "/target") }.should raise_error(IOError)
+        expect { Libreconv::Converter.new(file_path("nonsense.txt"), "/target") }.to raise_error(IOError)
       end
     end
 
@@ -36,42 +36,42 @@ describe Libreconv do
         target_file = "#{@target_path}/#{File.basename(@doc_file, ".doc")}.pdf"
         converter = Libreconv::Converter.new(@doc_file, target_file)
         converter.convert
-        File.file?(target_file).should == true
+        expect(File.file?(target_file)).to eq true
       end
 
       it "should convert a doc to pdf" do
-        target_file = "#{@target_path}/#{File.basename(@doc_file, ".doc")}.pdf" 
+        target_file = "#{@target_path}/#{File.basename(@doc_file, ".doc")}.pdf"
         converter = Libreconv::Converter.new(@doc_file, @target_path)
         converter.convert
-        File.file?(target_file).should == true
+        expect(File.file?(target_file)).to eq true
       end
 
       it "should convert a docx to pdf" do
-        target_file = "#{@target_path}/#{File.basename(@docx_file, ".docx")}.pdf" 
+        target_file = "#{@target_path}/#{File.basename(@docx_file, ".docx")}.pdf"
         converter = Libreconv::Converter.new(@docx_file, @target_path)
         converter.convert
-        File.file?(target_file).should == true
+        expect(File.file?(target_file)).to eq true
       end
 
       it "should convert a pptx to pdf" do
-        target_file = "#{@target_path}/#{File.basename(@pptx_file, ".pptx")}.pdf" 
+        target_file = "#{@target_path}/#{File.basename(@pptx_file, ".pptx")}.pdf"
         converter = Libreconv::Converter.new(@pptx_file, @target_path)
         converter.convert
-        File.file?(target_file).should == true
+        expect(File.file?(target_file)).to eq true
       end
 
       it "should convert a ppt to pdf" do
-        target_file = "#{@target_path}/#{File.basename(@ppt_file, ".ppt")}.pdf" 
+        target_file = "#{@target_path}/#{File.basename(@ppt_file, ".ppt")}.pdf"
         converter = Libreconv::Converter.new(@ppt_file, @target_path)
         converter.convert
-        File.file?(target_file).should == true
+        expect(File.file?(target_file)).to eq true
       end
 
       it "should convert a docx to pdf specifying an URL as source" do
         target_file = "#{@target_path}/docx.pdf"
         converter = Libreconv::Converter.new(@url, @target_path)
         converter.convert
-        File.file?(target_file).should == true
+        expect(File.file?(target_file)).to eq true
       end
     end
 
@@ -79,21 +79,21 @@ describe Libreconv do
       it "should return the user specified command path" do
         cmd = file_path("soffice") # just faking that the command is present here
         converter = Libreconv::Converter.new(@doc_file, "/target", cmd)
-        converter.soffice_command.should == cmd
+        expect(converter.soffice_command).to eq cmd
       end
 
       it "should return the command found in path" do
         cmd = `which soffice`.strip
         converter = Libreconv::Converter.new(@doc_file, "/target")
-        converter.soffice_command.should == cmd
+        expect(converter.soffice_command).to eq cmd
       end
     end
 
     describe ".convert" do
       it "should convert a file to pdf" do
-        target_file = "#{@target_path}/#{File.basename(@doc_file, ".doc")}.pdf" 
+        target_file = "#{@target_path}/#{File.basename(@doc_file, ".doc")}.pdf"
         Libreconv.convert(@doc_file, @target_path)
-        File.file?(target_file).should == true
+        expect(File.file?(target_file)).to eq true
       end
     end
   end
