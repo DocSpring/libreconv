@@ -17,11 +17,11 @@ module Libreconv
       @source = source
       @target = target
       @target_path = Dir.tmpdir
-      @soffice_command = soffice_command 
+      @soffice_command = soffice_command
       determine_soffice_command
       check_source_type
-      
-      unless @soffice_command && File.exists?(@soffice_command) 
+
+      unless @soffice_command && File.exists?(@soffice_command)
         raise IOError, "Can't find Libreoffice or Openoffice executable."
       end
     end
@@ -29,7 +29,7 @@ module Libreconv
     def convert
       orig_stdout = $stdout.clone
       $stdout.reopen File.new('/dev/null', 'w')
-      pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", "pdf", @source, "-outdir", @target_path)
+      pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", "pdf", @source, "--outdir", @target_path)
       Process.waitpid(pid)
       $stdout.reopen orig_stdout
       target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.pdf"
@@ -53,14 +53,14 @@ module Libreconv
           return exe if File.executable? exe
         end
       end
-    
+
       return nil
     end
 
     def check_source_type
       is_file = File.exists?(@source) && !File.directory?(@source)
       is_http = URI(@source).scheme == "http" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
-      is_https = URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)  
+      is_https = URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
       raise IOError, "Source (#{@source}) is neither a file nor an URL." unless is_file || is_http || is_https
     end
   end
