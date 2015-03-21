@@ -58,10 +58,10 @@ module Libreconv
     end
 
     def check_source_type
-      is_file = File.exists?(@source) && !File.directory?(@source)
-      is_http = URI(@source).scheme == "http" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
-      is_https = URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
-      raise IOError, "Source (#{@source}) is neither a file nor an URL." unless is_file || is_http || is_https
+      return if File.exists?(@source) && !File.directory?(@source) #file
+      return if URI(@source).scheme == "http" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess) #http
+      return if URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess) #https
+      raise IOError, "Source (#{@source}) is neither a file nor an URL."
     end
   end
 end
