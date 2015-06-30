@@ -7,4 +7,5 @@ notifications:
   recipients:
     - ricny046@gmail.com
 before_install:
+  - sudo apt-get update -qq
   - sudo apt-get install libreoffice
