@@ -6,18 +6,19 @@ require "spoon"
 
 module Libreconv
 
-  def self.convert(source, target, soffice_command = nil)
-    Converter.new(source, target, soffice_command).convert
+  def self.convert(source, target, soffice_command = nil, convert_to = nil)
+    Converter.new(source, target, soffice_command, convert_to).convert
   end
 
   class Converter
     attr_accessor :soffice_command
 
-    def initialize(source, target, soffice_command = nil)
+    def initialize(source, target, soffice_command = nil, convert_to = nil)
       @source = source
       @target = target
       @target_path = Dir.tmpdir
       @soffice_command = soffice_command
+      @convert_to = convert_to || "pdf"
       determine_soffice_command
       check_source_type
 
@@ -29,10 +30,10 @@ module Libreconv
     def convert
       orig_stdout = $stdout.clone
       $stdout.reopen File.new('/dev/null', 'w')
-      pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", "pdf", @source, "--outdir", @target_path)
+      pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", @convert_to, @source, "--outdir", @target_path)
       Process.waitpid(pid)
       $stdout.reopen orig_stdout
-      target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.pdf"
+      target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.#{File.basename(@convert_to, ":*")}"
       FileUtils.cp target_tmp_file, @target
     end
 
