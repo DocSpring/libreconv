@@ -1,12 +1,11 @@
 language: ruby
 rvm:
-  - 1.9.3
-  - 2.0.0
   - 2.1.1
-  - jruby-19mode
+  - 2.2.1
   - jruby-head
 notifications:
   recipients:
     - ricny046@gmail.com
 before_install:
+  - sudo apt-get update -qq
   - sudo apt-get install libreoffice

@@ -1,6 +1,6 @@
 # Libreconv
 
-Convert office documents to PDF using LibreOffice / OpenOffice.
+Convert office documents using LibreOffice / OpenOffice to one of their supported formats.
 
 [![Code Climate](https://codeclimate.com/github/ricn/libreconv.png)](https://codeclimate.com/github/ricn/libreconv)
 [![Build Status](https://travis-ci.org/ricn/libreconv.png?branch=master)](https://travis-ci.org/ricn/libreconv)
@@ -41,6 +41,12 @@ Libreconv.convert('http://myserver.com/123/document.docx', '/Users/ricn/pdf_docu
 # Converts document.docx to document.pdf
 # If you for some reason can't have soffice in your PATH you can specifiy the file path to the soffice binary
 Libreconv.convert('document.docx', '/Users/ricn/pdf_documents', '/Applications/LibreOffice.app/Contents/MacOS/soffice')
+
+# Converts document.docx to my_document_as.html
+Libreconv.convert('document.docx', '/Users/ricn/pdf_documents/my_document_as.html', nil, 'html')
+
+# Converts document.docx to my_document_as.pdf using writer_pdf_Export filter
+Libreconv.convert('document.docx', '/Users/ricn/pdf_documents/my_document_as.pdf', nil, 'pdf:writer_pdf_Export')
 
 ```
 
