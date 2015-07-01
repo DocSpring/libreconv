@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-You need to install Libreoffice or Openoffice on your system to use this gem. The code has been tested with Libreoffice 4.2.
+You need to install Libreoffice or Openoffice on your system to use this gem. The code has been tested with Libreoffice 4.4.
 
 ```ruby
 require 'libreconv'
