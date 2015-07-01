@@ -5,7 +5,7 @@ rvm:
   - jruby-head
 notifications:
   recipients:
-    - ricny046@gmail.com
+    - ricn@rny.io
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install libreoffice
