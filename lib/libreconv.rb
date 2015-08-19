@@ -16,7 +16,6 @@ module Libreconv
     def initialize(source, target, soffice_command = nil, convert_to = nil)
       @source = source
       @target = target
-      @target_path = Dir.tmpdir
       @soffice_command = soffice_command
       @convert_to = convert_to || "pdf"
       determine_soffice_command
@@ -30,11 +29,13 @@ module Libreconv
     def convert
       orig_stdout = $stdout.clone
       $stdout.reopen File.new('/dev/null', 'w')
-      pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", @convert_to, @source, "--outdir", @target_path)
-      Process.waitpid(pid)
-      $stdout.reopen orig_stdout
-      target_tmp_file = "#{@target_path}/#{File.basename(@source, ".*")}.#{File.basename(@convert_to, ":*")}"
-      FileUtils.cp target_tmp_file, @target
+      Dir.mktmpdir { |target_path|
+        pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", @convert_to, @source, "--outdir", target_path)
+        Process.waitpid(pid)
+        $stdout.reopen orig_stdout
+        target_tmp_file = "#{target_path}/#{File.basename(@source, ".*")}.#{File.basename(@convert_to, ":*")}"
+        FileUtils.cp target_tmp_file, @target
+      }
     end
 
     private
