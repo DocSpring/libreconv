@@ -21,23 +21,25 @@ module Libreconv
       determine_soffice_command
       @source_type = check_source_type
 
+      # If the URL contains GET params, the '&' could break when being used
+      # as an argument to soffice. Wrap it in single quotes to escape it.
+      # Then strip them from the target temp file name
+      @escaped_source = @source_type == 1 ? @source : "'#{@source}'"
+      @escaped_source_path = @source_type == 1 ? @source : URI.parse(@source).path
+
       unless @soffice_command && File.exists?(@soffice_command)
         raise IOError, "Can't find Libreoffice or Openoffice executable."
       end
     end
 
     def convert
-      orig_stdout = $stdout.clone
-      $stdout.reopen File.new('/dev/null', 'w')
       Dir.mktmpdir { |target_path|
-        # If the URL contains GET params, the '&' could break when being used
-        # as an argument to soffice. Wrap it in single quotes to escape it.
-        escaped_source = @source_type == 1 ? @source : "'#{@source}'"
-        pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", @convert_to, source, "--outdir", target_path)
+        orig_stdout = $stdout.clone
+        $stdout.reopen File.new('/dev/null', 'w')
+        pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", @convert_to, @escaped_source, "--outdir", target_path)
         Process.waitpid(pid)
         $stdout.reopen orig_stdout
-        escaped_source_path = @source_type == 1 ? @source : URI.parse(@source).path # Strip any GET params that the URL may have
-        target_tmp_file = "#{target_path}/#{File.basename(escaped_source_path, ".*")}.#{File.basename(@convert_to, ":*")}"
+        target_tmp_file = "#{target_path}/#{File.basename(@escaped_source_path, ".*")}.#{File.basename(@convert_to, ":*")}"
         FileUtils.cp target_tmp_file, @target
       }
     end
