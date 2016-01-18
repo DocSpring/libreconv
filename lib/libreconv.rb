@@ -34,13 +34,22 @@ module Libreconv
 
     def convert
       Dir.mktmpdir { |target_path|
-        orig_stdout = $stdout.clone
-        $stdout.reopen File.new('/dev/null', 'w')
-        pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", @convert_to, @escaped_source, "--outdir", target_path)
-        Process.waitpid(pid)
-        $stdout.reopen orig_stdout
-        target_tmp_file = "#{target_path}/#{File.basename(@escaped_source_path, ".*")}.#{File.basename(@convert_to, ":*")}"
-        FileUtils.cp target_tmp_file, @target
+        begin
+          orig_stdout = $stdout.clone
+          $stdout.reopen File.new('/dev/null', 'w')
+          pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", @convert_to, @escaped_source, "--outdir", target_path)
+          Process.waitpid(pid)
+          $stdout.reopen orig_stdout
+          target_tmp_file = "#{target_path}/#{File.basename(@escaped_source_path, ".*")}.#{File.basename(@convert_to, ":*")}"
+          FileUtils.cp target_tmp_file, @target
+        rescue Errno::ENOENT => ex
+          orig_stdout = $stdout.clone
+          $stdout.reopen File.new('/dev/null', 'w')
+          %x(#{[@soffice_command, "--headless", "--convert-to", @convert_to, @escaped_source, "--outdir", target_path].join(' ')})
+          $stdout.reopen orig_stdout
+          target_tmp_file = "#{target_path}/#{File.basename(@escaped_source_path, ".*")}.#{File.basename(@convert_to, ":*")}"
+          FileUtils.cp target_tmp_file, @target
+        end
       }
     end
 
