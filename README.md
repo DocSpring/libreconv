@@ -1,3 +1,5 @@
+This gem is unmaintained. Please let me know if you want to maintain it.
+
 # Libreconv
 
 Convert office documents using LibreOffice / OpenOffice to one of their supported formats.
