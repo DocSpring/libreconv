@@ -39,7 +39,7 @@ module Libreconv
                            "--outdir",
                            target_path)
         Process.waitpid(pid)
-        loud_stoud
+        original_stdout
         target_tmp_file = "#{target_path}/#{File.basename(@source, ".*")}.#{File.basename(@convert_to, ":*")}"
         FileUtils.cp target_tmp_file, @target
       }
@@ -52,7 +52,7 @@ module Libreconv
       $stdout.reopen File.new('/dev/null', 'w')
     end
 
-    def loud_stoud
+    def original_stdout
       $stdout.reopen @orig_stdout
     end
 
