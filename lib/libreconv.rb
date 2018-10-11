@@ -42,6 +42,7 @@ module Libreconv
         original_stdout
         target_tmp_file = "#{target_path}/#{File.basename(@source, ".*")}.#{File.basename(@convert_to, ":*")}"
         FileUtils.cp target_tmp_file, @target
+        FileUtils.rm_rf("/tmp/soffice-dir-#{uuid}")
       }
     end
 
@@ -57,7 +58,7 @@ module Libreconv
     end
 
     def uuid
-      SecureRandom.uuid
+      @uuid ||= SecureRandom.uuid
     end
 
     def determine_soffice_command
