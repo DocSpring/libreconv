@@ -27,18 +27,38 @@ module Libreconv
     end
 
     def convert
-      orig_stdout = $stdout.clone
-      $stdout.reopen File.new('/dev/null', 'w')
+      silent_stdout
       Dir.mktmpdir { |target_path|
-        pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", @convert_to, @source, "--outdir", target_path)
+        pid = Spoon.spawnp(@soffice_command,
+                           "'--accept=\"pipe,name=soffice-pipe-#{uuid};url;StarOffice.ServiceManager\"",
+                           "-env:UserInstallation=file:///tmp/soffice-dir-#{uuid}",
+                           "--headless",
+                           "--convert-to",
+                           @convert_to,
+                           @source,
+                           "--outdir",
+                           target_path)
         Process.waitpid(pid)
-        $stdout.reopen orig_stdout
+        loud_stoud
         target_tmp_file = "#{target_path}/#{File.basename(@source, ".*")}.#{File.basename(@convert_to, ":*")}"
         FileUtils.cp target_tmp_file, @target
       }
     end
 
     private
+
+    def silent_stdout
+      @orig_stdout = $stdout.clone
+      $stdout.reopen File.new('/dev/null', 'w')
+    end
+
+    def loud_stoud
+      $stdout.reopen @orig_stdout
+    end
+
+    def uuid
+      SecureRandom.uuid
+    end
 
     def determine_soffice_command
       unless @soffice_command
