@@ -38,6 +38,9 @@ Libreconv.convert('document.docx', '/Users/ricn/pdf_documents')
 # You can also convert a source file directly from an URL
 Libreconv.convert('http://myserver.com/123/document.docx', '/Users/ricn/pdf_documents/doc.pdf')
 
+# You cal pass a URL with GET params like this S3 example
+Libreconv.convert('https://mybucket.s3.amazonaws.com/myserver/123/document.docx?X-Amz-Expires=456&X-Amz-Signature=abc', '/Users/ricn/pdf_documents/doc.pdf')
+
 # Converts document.docx to document.pdf
 # If you for some reason can't have soffice in your PATH you can specifiy the file path to the soffice binary
 Libreconv.convert('document.docx', '/Users/ricn/pdf_documents', '/Applications/LibreOffice.app/Contents/MacOS/soffice')
