@@ -2,8 +2,7 @@
 
 Convert office documents using LibreOffice / OpenOffice to one of their supported formats.
 
-[![Code Climate](https://codeclimate.com/github/ricn/libreconv.png)](https://codeclimate.com/github/ricn/libreconv)
-[![Build Status](https://travis-ci.org/ricn/libreconv.png?branch=master)](https://travis-ci.org/ricn/libreconv)
+[![Build Status](https://travis-ci.org/FormAPI/libreconv.png?branch=master)](https://travis-ci.org/FormAPI/libreconv)
 [![Gem Version](https://badge.fury.io/rb/libreconv.svg)](http://badge.fury.io/rb/libreconv)
 
 ## Installation
