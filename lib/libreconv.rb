@@ -1,10 +1,18 @@
-require "libreconv/version"
-require "uri"
-require "net/http"
-require "tmpdir"
-require "spoon"
+# frozen_string_literal: true
+
+require 'libreconv/version'
+require 'uri'
+require 'net/http'
+require 'tmpdir'
+require 'open3'
 
 module Libreconv
+  class ConversionFailedError < StandardError; end
+
+  SOURCE_TYPES = {
+    file: 1,
+    url: 2
+  }.freeze
 
   def self.convert(source, target, soffice_command = nil, convert_to = nil)
     Converter.new(source, target, soffice_command, convert_to).convert
@@ -16,50 +24,72 @@ module Libreconv
     def initialize(source, target, soffice_command = nil, convert_to = nil)
       @source = source
       @target = target
-      @soffice_command = soffice_command
-      @convert_to = convert_to || "pdf"
-      determine_soffice_command
+      @soffice_command =
+        soffice_command ||
+        which('soffice') ||
+        which('soffice.bin')
+      @convert_to = convert_to || 'pdf'
       @source_type = check_source_type
 
-      # If the URL contains GET params, the '&' could break when being used
-      # as an argument to soffice. Wrap it in single quotes to escape it.
-      # Then strip them from the target temp file name
-      @escaped_source = @source_type == 1 ? @source : "'#{@source}'"
-      @escaped_source_path = @source_type == 1 ? @source : URI.parse(@source).path
+      # If the URL contains GET params, the '&' could break when
+      # being used as an argument to soffice. Wrap it in single
+      # quotes to escape it. Then strip them from the target
+      # temp file name.
+      @escaped_source =
+        if @source_type == 1
+          @source
+        else
+          "'#{@source}'"
+        end
+      @escaped_source_path =
+        if @source_type == 1
+          @source
+        else
+          URI.parse(@source).path
+        end
 
-      unless @soffice_command && File.exists?(@soffice_command)
-        raise IOError, "Can't find Libreoffice or Openoffice executable."
-      end
+      ensure_soffice_exists
     end
 
     def convert
-      Dir.mktmpdir { |target_path|
-        begin
-          orig_stdout = $stdout.clone
-          $stdout.reopen File.new('/dev/null', 'w')
-          pid = Spoon.spawnp(@soffice_command, "--headless", "--convert-to", @convert_to, @escaped_source, "--outdir", target_path)
-          Process.waitpid(pid)
-          $stdout.reopen orig_stdout
-          target_tmp_file = "#{target_path}/#{File.basename(@escaped_source_path, ".*")}.#{File.basename(@convert_to, ":*")}"
-          FileUtils.cp target_tmp_file, @target
-        rescue Errno::ENOENT => ex
-          orig_stdout = $stdout.clone
-          $stdout.reopen File.new('/dev/null', 'w')
-          %x(#{[@soffice_command, "--headless", "--convert-to", @convert_to, @escaped_source, "--outdir", target_path].join(' ')})
-          $stdout.reopen orig_stdout
-          target_tmp_file = "#{target_path}/#{File.basename(@escaped_source_path, ".*")}.#{File.basename(@convert_to, ":*")}"
-          FileUtils.cp target_tmp_file, @target
+      Dir.mktmpdir do |target_path|
+        command = [
+          soffice_command,
+          '--headless',
+          '--convert-to',
+          @convert_to,
+          @escaped_source,
+          '--outdir',
+          target_path
+        ]
+        output, error, status = Open3.capture3(
+          {
+            'HOME' => ENV['HOME'],
+            'PATH' => ENV['PATH'],
+            'LANG' => ENV['LANG']
+          },
+          *command,
+          unsetenv_others: true
+        )
+        unless status.success? && error == ''
+          raise ConversionFailedError,
+                "Conversion failed! Output: #{output.strip.inspect}, " \
+                "Error: #{error.strip.inspect}"
         end
-      }
+
+        target_tmp_file = "#{target_path}/" \
+          "#{File.basename(@escaped_source_path, '.*')}." \
+          "#{File.basename(@convert_to, ':*')}"
+        FileUtils.cp target_tmp_file, @target
+      end
     end
 
     private
 
-    def determine_soffice_command
-      unless @soffice_command
-        @soffice_command ||= which("soffice")
-        @soffice_command ||= which("soffice.bin")
-      end
+    def ensure_soffice_exists
+      return if soffice_command && File.exist?(soffice_command)
+
+      raise IOError, "Can't find Libreoffice or Openoffice executable."
     end
 
     def which(cmd)
@@ -71,14 +101,23 @@ module Libreconv
         end
       end
 
-      return nil
+      nil
     end
 
     def check_source_type
-      return 1 if File.exists?(@source) && !File.directory?(@source) #file
-      return 2 if URI(@source).scheme == "http" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess) #http
-      return 2 if URI(@source).scheme == "https" && Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess) #https
-      raise IOError, "Source (#{@source}) is neither a file nor an URL."
+      if File.exist?(@source) && !File.directory?(@source)
+        return SOURCE_TYPES[:file]
+      end
+      if URI(@source).scheme == 'http' &&
+         Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
+        return SOURCE_TYPES[:url]
+      end
+      if URI(@source).scheme == 'https' &&
+         Net::HTTP.get_response(URI(@source)).is_a?(Net::HTTPSuccess)
+        return SOURCE_TYPES[:url]
+      end
+
+      raise IOError, "Source (#{@source}) is neither a file nor a URL."
     end
   end
 end

@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-You need to install Libreoffice or Openoffice on your system to use this gem. The code has been tested with Libreoffice 4.4.
+You need to install Libreoffice or Openoffice on your system to use this gem. The code has been tested with Libreoffice 6.1.3.
 
 ```ruby
 require 'libreconv'
@@ -58,8 +58,12 @@ Libreconv.convert('document.docx', '/Users/ricn/pdf_documents/my_document_as.pdf
 The following people have contributed ideas, documentation, or code to Libreconv:
 
 * Richard Nyström
+* Nathan Broadbent
 
 ## Contributing
+
+* Install LibreOffice on Linux: `sudo apt-get install libreoffice`
+* Install LibreOffice on Mac: `brew cask install libreoffice`
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)

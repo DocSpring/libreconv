@@ -1,6 +1,10 @@
-require 'libreconv'
+# frozen_string_literal: true
 
-def file_path( *paths )
+require 'libreconv'
+require 'pry-byebug'
+require 'webmock/rspec'
+
+def fixture_path(*paths)
   File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', *paths))
 end
 

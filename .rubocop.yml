@@ -1,0 +1,25 @@
+require: rubocop-rspec
+
+Metrics/AbcSize:
+  # Max: 25
+  Enabled: false
+
+Metrics/MethodLength:
+  # Max: 20
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  # Max: 10
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
