@@ -4,6 +4,7 @@ require 'libreconv/version'
 require 'uri'
 require 'net/http'
 require 'tmpdir'
+require 'securerandom'
 require 'open3'
 
 module Libreconv
@@ -52,9 +53,19 @@ module Libreconv
     end
 
     def convert
+      pipe_uuid = SecureRandom.uuid
+
       Dir.mktmpdir do |target_path|
+        accept_args = [
+          "pipe,name=soffice-pipe-#{pipe_uuid}",
+          'url',
+          'StarOffice.ServiceManager'
+        ].join(';')
+
         command = [
           soffice_command,
+          "--accept=\"#{accept_args}\"",
+          "-env:UserInstallation=file:///tmp/soffice-dir-#{pipe_uuid}",
           '--headless',
           '--convert-to',
           @convert_to,
@@ -62,6 +73,7 @@ module Libreconv
           '--outdir',
           target_path
         ]
+
         output, error, status = Open3.capture3(
           {
             'HOME' => ENV['HOME'],
@@ -81,6 +93,7 @@ module Libreconv
           "#{File.basename(@escaped_source_path, '.*')}." \
           "#{File.basename(@convert_to, ':*')}"
         FileUtils.cp target_tmp_file, @target
+        FileUtils.rm_rf("/tmp/soffice-dir-#{pipe_uuid}")
       end
     end
 
