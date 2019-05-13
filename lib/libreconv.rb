@@ -83,7 +83,7 @@ module Libreconv
           *command,
           unsetenv_others: true
         )
-        unless status.success? && error == ''
+        if !status.success?
           raise ConversionFailedError,
                 "Conversion failed! Output: #{output.strip.inspect}, " \
                 "Error: #{error.strip.inspect}"
