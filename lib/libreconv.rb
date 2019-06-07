@@ -78,10 +78,11 @@ module Libreconv
           {
             'HOME' => ENV['HOME'],
             'PATH' => ENV['PATH'],
-            'LANG' => ENV['LANG']
+            'LANG' => ENV['LANG'],
+            'LD_LIBRARY_PATH' => ENV['LD_LIBRARY_PATH']
           },
           *command,
-          unsetenv_others: false
+          unsetenv_others: true
         )
         if !status.success?
           raise ConversionFailedError,
