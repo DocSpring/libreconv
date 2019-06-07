@@ -78,7 +78,8 @@ module Libreconv
           {
             'HOME' => ENV['HOME'],
             'PATH' => ENV['PATH'],
-            'LANG' => ENV['LANG']
+            'LANG' => ENV['LANG'],
+            'LD_LIBRARY_PATH' => ENV['LD_LIBRARY_PATH']
           },
           *command,
           unsetenv_others: true
