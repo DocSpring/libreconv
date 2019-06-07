@@ -81,7 +81,7 @@ module Libreconv
             'LANG' => ENV['LANG']
           },
           *command,
-          unsetenv_others: true
+          unsetenv_others: false
         )
         if !status.success?
           raise ConversionFailedError,
