@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    libreconv (0.9.1)
+    libreconv (0.9.3)
 
 GEM
   remote: https://rubygems.org/
