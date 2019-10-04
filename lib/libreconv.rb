@@ -53,11 +53,12 @@ module Libreconv
     end
 
     def convert
-      pipe_uuid = SecureRandom.uuid
+      pipe_name = 'soffice-pipe-' + SecureRandom.uuid.to_s
+      pipe_path = File.join Dir.tmpdir, pipe_name
 
       Dir.mktmpdir do |target_path|
         accept_args = [
-          "pipe,name=soffice-pipe-#{pipe_uuid}",
+          'pipe,name=' + pipe_name,
           'url',
           'StarOffice.ServiceManager'
         ].join(';')
@@ -65,7 +66,8 @@ module Libreconv
         command = [
           soffice_command,
           "--accept=\"#{accept_args}\"",
-          "-env:UserInstallation=file:///tmp/soffice-dir-#{pipe_uuid}",
+          '-env:UserInstallation=file:///' +
+            pipe_path.gsub('\\', '/').gsub(%r{^/}, ''),
           '--headless',
           '--convert-to',
           @convert_to,
@@ -79,22 +81,27 @@ module Libreconv
             'HOME' => ENV['HOME'],
             'PATH' => ENV['PATH'],
             'LANG' => ENV['LANG'],
-            'LD_LIBRARY_PATH' => ENV['LD_LIBRARY_PATH']
+            'LD_LIBRARY_PATH' => ENV['LD_LIBRARY_PATH'],
+            'SYSTEMROOT' => ENV['SYSTEMROOT'],
+            'TEMP' => ENV['TEMP']
           },
           *command,
           unsetenv_others: true
         )
-        if !status.success?
+
+        FileUtils.rm_rf pipe_path if File.exist?(pipe_path)
+        unless status.success?
           raise ConversionFailedError,
-                "Conversion failed! Output: #{output.strip.inspect}, " \
-                "Error: #{error.strip.inspect}"
+                'Conversion failed! Output: ' + output.strip.inspect +
+                ', Error: ' + error.strip.inspect
         end
 
-        target_tmp_file = "#{target_path}/" \
-          "#{File.basename(@escaped_source_path, '.*')}." \
-          "#{File.basename(@convert_to, ':*')}"
+        target_tmp_file = File.join(
+          target_path,
+          File.basename(@escaped_source_path, '.*') + '.' +
+            File.basename(@convert_to, ':*')
+        )
         FileUtils.cp target_tmp_file, @target
-        FileUtils.rm_rf("/tmp/soffice-dir-#{pipe_uuid}")
       end
     end
 
@@ -103,14 +110,14 @@ module Libreconv
     def ensure_soffice_exists
       return if soffice_command && File.exist?(soffice_command)
 
-      raise IOError, "Can't find Libreoffice or Openoffice executable."
+      raise IOError, 'Can\'t find LibreOffice or OpenOffice executable.'
     end
 
     def which(cmd)
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
       ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
         exts.each do |ext|
-          exe = File.join(path, "#{cmd}#{ext}")
+          exe = File.join(path, cmd + ext)
           return exe if File.executable? exe
         end
       end
