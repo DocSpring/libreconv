@@ -1,7 +1,13 @@
+sudo: false
 language: ruby
+cache: bundler
 rvm:
-  - 2.2.0
-  - 2.5.3
+  - 2.2
+  - 2.3
+  - 2.5
+  - jruby
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install libreoffice
+  - sudo apt-get install libreoffice-core libreoffice-writer libreoffice-calc libreoffice-impress -y --no-install-recommends
+before_script: bundle exec rubocop
+script: bundle exec rake
