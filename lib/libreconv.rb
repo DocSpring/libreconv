@@ -49,7 +49,7 @@ module Libreconv
 
       Dir.mktmpdir do |target_path|
         command = build_command(tmp_pipe_path, target_path)
-        target_tmp_file = execute_command(command, target_path)
+        target_tmp_file = execute_command(command, target_path, RUBY_PLATFORM =~ /java/)
 
         FileUtils.cp target_tmp_file, @target
       end
@@ -63,9 +63,13 @@ module Libreconv
     # @param [String] target_path
     # @return [String]
     # @raise [ConversionFailedError]  When soffice command execution error.
-    def execute_command(command, target_path)
-      opts = RUBY_PLATFORM =~ /java/ ? {} : { unsetenv_others: true }
-      output, error, status = Open3.capture3 command_env, *command, opts
+    def execute_command(command, target_path, is_jruby = false)
+      output, error, status =
+        if is_jruby
+          Open3.capture3 command_env, *command
+        else
+          Open3.capture3 command_env, *command, unsetenv_others: true
+        end
 
       target_tmp_file = File.join(target_path, target_filename)
       return target_tmp_file if status.success? && File.exist?(target_tmp_file)
@@ -81,7 +85,7 @@ module Libreconv
 
     # @param [String] tmp_pipe_path
     # @param [String] target_path
-    # @return [Array]
+    # @return [Array<String>]
     def build_command(tmp_pipe_path, target_path)
       [
         soffice_command,
