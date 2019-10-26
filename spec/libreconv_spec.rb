@@ -7,7 +7,7 @@ RSpec.describe Libreconv do
 
   describe '.convert' do
     it 'converts an office file to the specified target pdf' do
-      create_tmpfile(suffix: '.pdf') do |target_file|
+      create_tmpfile(['', '.pdf']) do |target_file|
         described_class.convert(fixture_file, target_file)
 
         expect(File.size?(target_file)).to be > 0

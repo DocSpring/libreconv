@@ -14,7 +14,7 @@ RSpec.describe Libreconv::Converter do
     it 'converts a source URL to pdf' do
       url = stub_sample_url
 
-      create_tmpfile(suffix: '.pdf') do |target_file|
+      create_tmpfile(['', '.pdf']) do |target_file|
         described_class.new(url, target_file).convert
 
         expect(File.size?(target_file)).to be > 0

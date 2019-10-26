@@ -3,7 +3,7 @@
 RSpec.describe Libreconv::Converter do
   describe '#convert' do
     it 'converts a file to the specified target html' do
-      create_tmpfile(suffix: '.html') do |target_file|
+      create_tmpfile(['', '.html']) do |target_file|
         described_class.new(fixture_file, target_file, nil, 'html').convert
 
         expect(File.size?(target_file)).to be > 0

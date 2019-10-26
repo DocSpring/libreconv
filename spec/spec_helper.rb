@@ -6,11 +6,11 @@ require 'libreconv'
 require 'webmock/rspec'
 
 module Helpers
-  FILE_TYPES = %i[docx doc pptx ppt xlsx xls].freeze
+  FILE_TYPES = %w[docx doc pptx ppt xlsx xls].map(&:to_sym).freeze
 
   # @return [String]
   def fixture_path(*paths)
-    File.expand_path(File.join('fixtures', *paths), __dir__)
+    File.join(File.expand_path('../fixtures', __FILE__), *paths)
   end
 
   # @return [String]
@@ -20,8 +20,8 @@ module Helpers
   end
 
   # @yieldreturn [String]
-  def create_tmpfile(prefix: '', suffix: '', tmpdir: nil)
-    Dir::Tmpname.create([prefix, suffix], tmpdir) do |tmpfile|
+  def create_tmpfile(basename = '', tmpdir = nil)
+    Dir::Tmpname.create(basename, tmpdir) do |tmpfile|
       begin
         yield tmpfile
       ensure

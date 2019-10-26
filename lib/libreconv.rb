@@ -49,9 +49,8 @@ module Libreconv
 
       Dir.mktmpdir do |target_path|
         command = build_command(tmp_pipe_path, target_path)
-        result = Open3.capture3 command_env, *command, unsetenv_others: true
+        target_tmp_file = execute_command(command, target_path)
 
-        target_tmp_file = check_command_result(target_path, *result)
         FileUtils.cp target_tmp_file, @target
       end
     ensure
@@ -60,10 +59,14 @@ module Libreconv
 
     private
 
+    # @param [Array<String>] command
     # @param [String] target_path
     # @return [String]
     # @raise [ConversionFailedError]  When soffice command execution error.
-    def check_command_result(target_path, output, error, status)
+    def execute_command(command, target_path)
+      opts = RUBY_PLATFORM =~ /java/ ? nil : { unsetenv_others: true }
+      output, error, status = Open3.capture3 command_env, *command, opts
+
       target_tmp_file = File.join(target_path, target_filename)
       return target_tmp_file if status.success? && File.exist?(target_tmp_file)
 
@@ -73,7 +76,7 @@ module Libreconv
 
     # @return [Hash]
     def command_env
-      %w[HOME PATH LANG LD_LIBRARY_PATH SYSTEMROOT TEMP].map { |k| [k, ENV[k]] }.to_h
+      Hash[%w[HOME PATH LANG LD_LIBRARY_PATH SYSTEMROOT TEMP].map { |k| [k, ENV[k]] }]
     end
 
     # @param [String] tmp_pipe_path
@@ -165,8 +168,8 @@ module Libreconv
     # @param [String] path
     # @return [String]
     def build_file_uri(path)
-      separators = /[#{Regexp.quote "#{File::SEPARATOR}#{File::ALT_SEPARATOR}"}]/.freeze
-      unsafe = Regexp.new("[^#{URI::PATTERN::UNRESERVED}/?:]").freeze
+      separators = /[#{Regexp.quote "#{File::SEPARATOR}#{File::ALT_SEPARATOR}"}]/
+      unsafe = Regexp.new("[^#{URI::PATTERN::UNRESERVED}/?:]")
 
       'file:///' + URI::DEFAULT_PARSER.escape(path.gsub(separators, '/').sub(%r{^/+}, ''), unsafe)
     end
