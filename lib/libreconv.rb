@@ -64,7 +64,7 @@ module Libreconv
     # @return [String]
     # @raise [ConversionFailedError]  When soffice command execution error.
     def execute_command(command, target_path)
-      opts = RUBY_PLATFORM =~ /java/ ? nil : { unsetenv_others: true }
+      opts = RUBY_PLATFORM =~ /java/ ? {} : { unsetenv_others: true }
       output, error, status = Open3.capture3 command_env, *command, opts
 
       target_tmp_file = File.join(target_path, target_filename)
