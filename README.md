@@ -64,8 +64,9 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 
 The following people have contributed ideas, documentation, or code to Libreconv:
 
-* Richard Nyström
-* Nathan Broadbent
+* [Richard Nyström](https://github.com/ricn)
+* [Nathan Broadbent](https://github.com/ndbroadbent)
+* [Thach Nguyen](https://github.com/nthachus)
 
 ## Contributing
 
