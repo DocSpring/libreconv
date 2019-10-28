@@ -9,7 +9,9 @@ Convert office documents using LibreOffice / OpenOffice to one of their supporte
 
 Add this line to your application's Gemfile:
 
-    gem 'libreconv'
+```ruby
+gem 'libreconv'
+```
 
 And then execute:
 
@@ -21,7 +23,7 @@ Or install it yourself as:
 
 ## Usage
 
-You need to install Libreoffice or Openoffice on your system to use this gem. The code has been tested with Libreoffice 6.1.3.
+You need to install LibreOffice or OpenOffice on your system to use this gem. The code has been tested with LibreOffice 6.1.3.
 
 ```ruby
 require 'libreconv'
@@ -41,7 +43,7 @@ Libreconv.convert('http://myserver.com/123/document.docx', '/Users/ricn/pdf_docu
 Libreconv.convert('https://mybucket.s3.amazonaws.com/myserver/123/document.docx?X-Amz-Expires=456&X-Amz-Signature=abc', '/Users/ricn/pdf_documents/doc.pdf')
 
 # Converts document.docx to document.pdf
-# If you for some reason can't have soffice in your PATH you can specifiy the file path to the soffice binary
+# If you for some reason can't have soffice in your PATH you can specify the file path to the soffice binary
 Libreconv.convert('document.docx', '/Users/ricn/pdf_documents', '/Applications/LibreOffice.app/Contents/MacOS/soffice')
 
 # Converts document.docx to my_document_as.html
@@ -49,8 +51,14 @@ Libreconv.convert('document.docx', '/Users/ricn/pdf_documents/my_document_as.htm
 
 # Converts document.docx to my_document_as.pdf using writer_pdf_Export filter
 Libreconv.convert('document.docx', '/Users/ricn/pdf_documents/my_document_as.pdf', nil, 'pdf:writer_pdf_Export')
-
 ```
+
+## Development
+
+After checking out the repo, run `bundle install` to install dependencies. Then, run `bundle exec rake` to run the tests.
+You can also run `irb -r bundler/setup -r libreconv` for an interactive prompt that will allow you to experiment.
+
+To install this gem onto your local machine, run `bundle exec rake install`.
 
 ## Credits
 
@@ -69,3 +77,7 @@ The following people have contributed ideas, documentation, or code to Libreconv
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
