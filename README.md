@@ -60,14 +60,6 @@ You can also run `irb -r bundler/setup -r libreconv` for an interactive prompt t
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
-## Credits
-
-The following people have contributed ideas, documentation, or code to Libreconv:
-
-* [Richard Nyström](https://github.com/ricn)
-* [Nathan Broadbent](https://github.com/ndbroadbent)
-* [Thach Nguyen](https://github.com/nthachus)
-
 ## Contributing
 
 * Install LibreOffice on Linux: `sudo apt-get install libreoffice`
@@ -78,6 +70,14 @@ The following people have contributed ideas, documentation, or code to Libreconv
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Contributors
+
+The following people have contributed ideas, documentation, or code to Libreconv:
+
+* [Richard Nyström](https://github.com/ricn)
+* [Nathan Broadbent](https://github.com/ndbroadbent)
+* [Thach Nguyen](https://github.com/nthachus)
 
 ## License
 
