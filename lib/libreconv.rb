@@ -80,7 +80,7 @@ module Libreconv
 
     # @return [Hash]
     def command_env
-      Hash[%w[HOME PATH LANG LD_LIBRARY_PATH SYSTEMROOT TEMP].map { |k| [k, ENV[k]] }]
+      Hash[%w[HOME PATH LANG LD_LIBRARY_PATH SYSTEMROOT TEMP TZ].map { |k| [k, ENV[k]] }]
     end
 
     # @param [String] tmp_pipe_path
