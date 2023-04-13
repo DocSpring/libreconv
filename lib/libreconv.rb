@@ -113,7 +113,12 @@ module Libreconv
 
     # @return [String]
     def target_filename
-      File.basename(escaped_source_path, '.*') + '.' + File.basename(@convert_to, ':*')
+      File.basename(escaped_source_path, '.*') + '.' + target_extname
+    end
+
+    # @return [String]
+    def target_extname
+      @convert_to.split(':')[0]
     end
 
     # @raise [IOError] If soffice headless command line tool not found.
