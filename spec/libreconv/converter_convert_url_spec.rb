@@ -23,7 +23,7 @@ RSpec.describe Libreconv::Converter do
   end
 
   def stub_sample_url
-    url = 'http://file-examples.com/wp-content/uploads/2017/02/file-sample_100kB.doc'
+    url = 'http://file-examples.com/wp-content/storage/2017/02/file-sample_100kB.doc'
     redirection = url.sub(/^http:/i, 'https:') + '?a=a&b=b#c'
 
     stub_request(:head, url)
